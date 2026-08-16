@@ -71,3 +71,8 @@ _agents/
 .cursor/
 .windsurf/
 .zed/
+
+# ── VitePress (build output and cache; no lockfile: builds track latest minor) ─
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+package-lock.json
