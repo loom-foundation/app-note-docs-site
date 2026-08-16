@@ -10,6 +10,22 @@
   --vp-nav-logo-height: 24px;
 }
 
+/* The word "Note" beside the wordmark: heavier and a step larger than the
+   theme's 16px default. Scoped to the nav title's span so nothing else
+   moves. */
+.VPNavBarTitle .title > span {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Landing hero name, vitepress.dev-style: the brand gradient (Electric
+   Cyan to Vibrant Magenta, per org/brand/assets/loom-logo.md) clipped to
+   the "Note" heading through the theme's own variables. */
+:root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #00E5FF 30%, #D600FF);
+}
+
 /* GitHub-style alert headers: the octicon GitHub pairs with each alert type,
    drawn via CSS mask from an inline data URI (no external requests) and
    painted with currentColor, so it always matches the title text colour.

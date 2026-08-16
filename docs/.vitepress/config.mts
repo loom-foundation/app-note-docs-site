@@ -105,5 +105,11 @@ export default withMermaid({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/loom-foundation/corpus-note' },
     ],
+    // Note's actual terms, per the corpus's LICENSE file: "The Loom Method:
+    // Note © 2026 by Bruno Almeida do Lago is licensed under CC BY 4.0".
+    footer: {
+      message: 'Released under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0 License</a>.',
+      copyright: 'Copyright © 2026 Bruno Almeida do Lago',
+    },
   },
 })
