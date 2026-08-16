@@ -1,13 +1,7 @@
 <!-- The landing hero's artwork: Ada Lovelace's Note G, linked to its story.
      The corpus's index.md frontmatter cannot express a linked image, so the
      default theme's home-hero-image slot carries it instead. The img keeps
-     the theme's own `image-src` class, so sizing stays the default theme's.
-
-     Two deliberate departures from that default, both owner-directed:
-     a radial mask dissolves the artwork's square edge into the page, and at
-     the desktop breakpoint the image drops so its top meets the top of the
-     "Note" heading beside it. Below that breakpoint the hero stacks, the
-     heading no longer sits beside the image, and the offset is dropped. -->
+     the theme's own `image-src` class, so sizing stays the default theme's. -->
 <template>
   <a
     href="https://en.wikipedia.org/wiki/Note_G"
@@ -25,31 +19,35 @@
 </template>
 
 <style scoped>
-/* The mask is opaque across the middle and falls away to nothing before the
-   bitmap's own edge, so no straight side or corner ever meets the page. */
+/* A radial mask dissolves the bitmap's square edge into the page. The stops
+   are measured against the nearest side, so the fade completes just inside
+   every straight edge and no side or corner ever meets the page. Holding
+   full opacity to 82% keeps the Bernoulli diagram intact and confines the
+   fade to a narrow band. */
 .note-g {
   -webkit-mask-image: radial-gradient(
-    closest-side circle at 50% 48%,
-    #000 52%,
-    rgba(0, 0, 0, 0.65) 70%,
-    rgba(0, 0, 0, 0.25) 84%,
-    transparent 96%
+    closest-side circle at 50% 50%,
+    #000 82%,
+    rgba(0, 0, 0, 0.45) 92%,
+    transparent 99%
   );
   mask-image: radial-gradient(
-    closest-side circle at 50% 48%,
-    #000 52%,
-    rgba(0, 0, 0, 0.65) 70%,
-    rgba(0, 0, 0, 0.25) 84%,
-    transparent 96%
+    closest-side circle at 50% 50%,
+    #000 82%,
+    rgba(0, 0, 0, 0.45) 92%,
+    transparent 99%
   );
 }
 
-/* The theme centres the image with translate(-50%, -50%); the offset is added
-   to that translation rather than replacing it. 960px is the breakpoint at
-   which the theme puts the heading beside the image instead of above it. */
+/* Above this width the theme sets the hero side by side and the artwork is
+   placed against the heading; below it the hero stacks and the theme's own
+   centring stands. The translation is the theme's, restated because these
+   offsets replace the declaration carrying it. */
 @media (min-width: 960px) {
   .note-g {
-    transform: translate(-50%, calc(-50% + 64px));
+    top: 45%;
+    left: 55%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>
