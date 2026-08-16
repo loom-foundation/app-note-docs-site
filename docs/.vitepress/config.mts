@@ -1,4 +1,14 @@
+import path from 'node:path'
+import { createRequire } from 'node:module'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+
+// srcDir points OUTSIDE this project root (the corpus checkout carries no
+// node_modules), so the imports VitePress injects into each markdown page
+// ('vue', 'vue/server-renderer') cannot be found by walking up from the
+// page's own directory. Alias them (exact matches only) to this app's own
+// dependency tree, resolved relative to this config file.
+const require = createRequire(import.meta.url)
+const vueDir = path.dirname(require.resolve('vue/package.json'))
 
 // The docs SOURCE lives in the Note corpus (corpora/note/docs in the west
 // workspace, three levels up from this project root); this repository is
@@ -17,6 +27,14 @@ export default withMermaid({
   srcDir: '../../../corpora/note/docs',
   markdown: { attrs: { disable: true } },
   srcExclude: ['examples/**'],
+  vite: {
+    resolve: {
+      alias: [
+        { find: /^vue$/, replacement: path.join(vueDir, 'dist/vue.runtime.esm-bundler.js') },
+        { find: /^vue\/server-renderer$/, replacement: path.join(vueDir, 'server-renderer/index.mjs') },
+      ],
+    },
+  },
   themeConfig: {
     search: { provider: 'local' },
     sidebar: [
