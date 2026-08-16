@@ -23,7 +23,7 @@
    the "Note" heading through the theme's own variables. */
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(120deg, #00E5FF 30%, #D600FF);
+  --vp-home-hero-name-background: linear-gradient(12deg, #D600FF 10%, #00E5FF);
 }
 
 /* GitHub-style alert headers: the octicon GitHub pairs with each alert type,
