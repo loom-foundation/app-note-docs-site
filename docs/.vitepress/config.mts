@@ -1,6 +1,6 @@
 import { withMermaid } from 'vitepress-plugin-mermaid'
 
-// The docs SOURCE lives in the Note corpus (corpus/note/docs in the west
+// The docs SOURCE lives in the Note corpus (corpora/note/docs in the west
 // workspace, three levels up from this project root); this repository is
 // only the disposable renderer. srcDir points at the corpus in place, so
 // the markdown is never moved or copied here.
@@ -14,7 +14,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 // exercised by automated tests, not pages.
 export default withMermaid({
   title: 'Note',
-  srcDir: '../../../corpus/note/docs',
+  srcDir: '../../../corpora/note/docs',
   markdown: { attrs: { disable: true } },
   srcExclude: ['examples/**'],
   themeConfig: {
