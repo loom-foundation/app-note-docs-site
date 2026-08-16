@@ -28,26 +28,52 @@
   -webkit-mask-image: radial-gradient(
     closest-side circle at 50% 50%,
     #000 82%,
-    rgba(0, 0, 0, 0.45) 92%,
+    rgba(0, 0, 0, 0.15) 92%,
     transparent 99%
   );
   mask-image: radial-gradient(
     closest-side circle at 50% 50%,
     #000 82%,
-    rgba(0, 0, 0, 0.45) 92%,
+    rgba(0, 0, 0, 0.15) 92%,
     transparent 99%
   );
 }
 
-/* Above this width the theme sets the hero side by side and the artwork is
-   placed against the heading; below it the hero stacks and the theme's own
-   centring stands. The translation is the theme's, restated because these
-   offsets replace the declaration carrying it. */
+/* The artwork sits on cream paper, so on a dark page the same fade leaves a
+   bright disc with a visible halo where the paper meets the background. The
+   dark theme therefore starts the fade further in and runs it longer, and
+   dims the paper toward the page, so the edge dissolves rather than glows. */
+html.dark .note-g {
+  -webkit-mask-image: radial-gradient(
+    closest-side circle at 50% 50%,
+    #000 54%,
+    rgba(0, 0, 0, 0.5) 74%,
+    rgba(0, 0, 0, 0.12) 88%,
+    transparent 99%
+  );
+  mask-image: radial-gradient(
+    closest-side circle at 50% 50%,
+    #000 54%,
+    rgba(0, 0, 0, 0.5) 74%,
+    rgba(0, 0, 0, 0.12) 88%,
+    transparent 99%
+  );
+  filter: brightness(0.82) contrast(1.04);
+}
+
+/* Above this width the theme sets the hero side by side; below it the hero
+   stacks and the theme's own centring stands.
+
+   The artwork is displaced from the container's centre in pixels rather than
+   percentages. Between this breakpoint and the container's 1152px cap the
+   container is fluid, so a percentage offset would slide the artwork further
+   right as the window widens; a pixel offset holds it against the heading at
+   every width and simply collapses when the hero stacks. */
 @media (min-width: 960px) {
   .note-g {
-    top: 45%;
-    left: 55%;
-    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 56px), calc(-50% + 51px));
   }
 }
 </style>
