@@ -60,30 +60,50 @@ export default withMermaid({
       ],
     },
   },
+  // Root locale scaffolding: English (GB) today. VitePress only renders the
+  // language menu once a second locale is configured; this keys the structure
+  // so that day is an additive change.
+  locales: {
+    root: { label: 'English (GB)', lang: 'en-GB' },
+  },
   themeConfig: {
     logo: { light: '/loom-wordmark.svg', dark: '/loom-wordmark-inverted.svg' },
-    siteTitle: false,
+    siteTitle: 'Note',
     search: { provider: 'local' },
-    sidebar: [
+    nav: [
+      { text: 'Guide', link: '/guide/introduction' },
+      { text: 'Reference', link: '/reference/the-note-file' },
       {
-        text: 'Tutorials',
+        text: '0.9.0',
         items: [
-          { text: 'Your first note', link: '/tutorials/your-first-note' },
+          { text: 'Changelog', link: 'https://github.com/loom-foundation/corpus-note/commits/main' },
+          { text: 'Contributing', link: 'https://github.com/loom-foundation/corpus-note/blob/main/CONTRIBUTING.md' },
         ],
       },
-      {
-        text: 'Reference',
-        items: [
-          { text: 'The note file', link: '/reference/the-note-file' },
-          { text: 'Identifiers', link: '/reference/identifiers' },
-        ],
-      },
-      {
-        text: 'Explanation',
-        items: [
-          { text: 'Why opaque ids', link: '/explanation/why-opaque-ids' },
-        ],
-      },
+    ],
+    sidebar: {
+      '/guide/': [
+        {
+          text: 'Guide',
+          items: [
+            { text: 'Introduction', link: '/guide/introduction' },
+            { text: 'Your first note', link: '/guide/your-first-note' },
+            { text: 'Why opaque ids', link: '/guide/why-opaque-ids' },
+          ],
+        },
+      ],
+      '/reference/': [
+        {
+          text: 'Reference',
+          items: [
+            { text: 'The note file', link: '/reference/the-note-file' },
+            { text: 'Identifiers', link: '/reference/identifiers' },
+          ],
+        },
+      ],
+    },
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/loom-foundation/corpus-note' },
     ],
   },
 })
