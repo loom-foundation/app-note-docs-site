@@ -1,0 +1,205 @@
+<!doctype html>
+<!--
+  The source of the Open Graph / Twitter social card, rendered to a PNG by
+  scripts/render-social-card.mjs.
+
+  The file opens straight in a browser, so the card can be designed by eye:
+  the viewport shows exactly what the screenshot captures. Editing this markup
+  and running `npm run social-card` is the whole update cycle.
+
+  Type and colour come from the site itself rather than from values repeated
+  here. The two stylesheets below are the same ones the rendered site loads:
+  VitePress's palette and font stacks, then the Loom theme on top, which is
+  where the wordmark gradient and the house accents are declared. The sizes
+  below mirror the landing hero at its widest breakpoint, which is the shape
+  the card is a still of.
+-->
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <title>Note social card</title>
+    <link
+      rel="stylesheet"
+      href="../../node_modules/vitepress/dist/client/theme-default/styles/vars.css"
+    />
+    <link rel="stylesheet" href="../../docs/.vitepress/theme/custom.css" />
+    <style>
+      /* Inter, from VitePress's own bundled copy. Its fonts.css cannot be
+         linked as it stands: the first line pulls the family from Google's
+         CDN, which would make a render depend on the network and on whatever
+         that CDN serves that day. Declaring the two Latin subsets here keeps
+         the render offline and identical every time. */
+      @font-face {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 100 900;
+        src: url('../../node_modules/vitepress/dist/client/theme-default/fonts/inter-roman-latin.woff2')
+          format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+          U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+          U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 100 900;
+        src: url('../../node_modules/vitepress/dist/client/theme-default/fonts/inter-roman-latin-ext.woff2')
+          format('woff2');
+        unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F,
+          U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+          U+A720-A7FF;
+      }
+
+      /* The card's own ground: the parchment the artwork already sits on, so
+         the bitmap's masked edge dissolves into the card instead of meeting
+         the white the site uses behind the hero. */
+      :root {
+        --card-bg: #fdfbee;
+        /* How far the copy rides above the card's middle. The block is
+           centred against the artwork, which reads low because the tagline's
+           grey carries less weight than the headline's black; lifting it sets
+           the two columns level to the eye. Raise to lift, lower to drop, and
+           0 returns it to true centre. */
+        --copy-rise: 20px;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--card-bg);
+      }
+
+      .card {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 1200px;
+        height: 630px;
+        /* No padding on the artwork's side: it runs to the card's edge. */
+        padding: 0 0 0 64px;
+        gap: 32px;
+        background: var(--card-bg);
+        font-family: var(--vp-font-family-base);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Shifted rather than re-laid-out, so the lift costs the column no
+         measure and the artwork stays where it is. */
+      .copy {
+        flex: 1 1 auto;
+        min-width: 0;
+        transform: translateY(calc(var(--copy-rise) * -1));
+      }
+
+      /* Larger than the hero the card is a still of. A card is read as a
+         thumbnail in a timeline, at a fraction of the size it is rendered,
+         so the type is set to survive that reduction rather than to match
+         the page. */
+      .name,
+      .text {
+        margin: 0;
+        letter-spacing: -0.4px;
+        font-size: 66px;
+        line-height: 76px;
+        font-weight: 700;
+      }
+
+      /* The wordmark gradient and its shadow, both painted exactly as the
+         landing hero paints them: the theme's stylesheet above declares each,
+         and this only applies them to the card's own markup.
+
+         The shadow is a filter rather than a text-shadow, for the reason the
+         theme records beside the token. */
+      .name {
+        width: fit-content;
+        background: var(--vp-home-hero-name-background);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: var(--vp-home-hero-name-color);
+        -webkit-text-fill-color: var(--vp-home-hero-name-color);
+        filter: drop-shadow(var(--loom-hero-name-shadow));
+      }
+
+      /* Sized to stand on one line in the column the artwork leaves: broken
+         across two, the phrase reads as two fragments rather than one. */
+      .text {
+        font-size: 54px;
+        line-height: 74px;
+        color: var(--vp-c-text-1);
+      }
+
+      /* Looser leading than the hero's. The measure here is long and the
+         weight light, and the extra air is what keeps the sentence readable
+         once the card is scaled down to a thumbnail. */
+      .tagline {
+        margin: 0;
+        padding-top: 10px;
+        font-size: 25px;
+        line-height: 42px;
+        font-weight: 500;
+        color: var(--vp-c-text-2);
+      }
+
+      /* The artwork's width is what is left once the copy has the measure it
+         needs, and it sits against the card's right edge. */
+      .artwork {
+        flex: 0 0 auto;
+        width: 500px;
+        height: 500px;
+      }
+
+      /* The same radial mask the landing hero applies, measured against the
+         nearest side so the fade completes inside every straight edge and no
+         side or corner ever meets the card. */
+      .artwork {
+        -webkit-mask-image: radial-gradient(
+          closest-side circle at 50% 50%,
+          #000 54%,
+          rgba(0, 0, 0, 0.5) 74%,
+          rgba(0, 0, 0, 0.12) 88%,
+          transparent 99%
+        );
+        mask-image: radial-gradient(
+          closest-side circle at 50% 50%,
+          #000 54%,
+          rgba(0, 0, 0, 0.5) 74%,
+          rgba(0, 0, 0, 0.12) 88%,
+          transparent 99%
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The copy is the landing hero's, and is taken from it: each block below
+         names the field of the corpus home page's frontmatter it stands for,
+         and the render replaces the words with whatever that field says. What
+         is written here is only what the page shows when it is opened on its
+         own, so editing it changes the preview and not the card. -->
+    <div class="card">
+      <div class="copy">
+        <p class="name" data-hero="name">Note</p>
+        <p class="text" data-hero="text">Intent, held in pattern.</p>
+        <p class="tagline" data-hero="tagline">
+          Note turns intent into a living, verifiable blueprint, giving humans
+          and AI the clarity to build the right thing together and always know
+          why.
+        </p>
+      </div>
+      <!-- The 1024px master, not the WebP the site's hero uses: the card is
+           drawn at twice its stated size, so the web-delivery copy is smaller
+           than the box it would fill. It sits here rather than in the site's
+           public directory, which would publish it: nothing needs a 1.8 MB
+           artwork over the wire. -->
+      <img
+        class="artwork"
+        src="./ada-lovelace-note-g.png"
+        width="1024"
+        height="1024"
+        alt=""
+      />
+    </div>
+  </body>
+</html>
