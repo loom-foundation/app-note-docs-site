@@ -35,3 +35,30 @@ jobs:
         working-directory: apps/note-docs-site
       - run: npm run docs:build
         working-directory: apps/note-docs-site
+      - uses: actions/upload-artifact@v7
+        with:
+          name: docs-dist
+          path: apps/note-docs-site/docs/.vitepress/dist
+          retention-days: 1
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # wrangler.jsonc lives in this repository; the built assets arrive from build as an artifact.
+      - uses: actions/checkout@v7
+        with:
+          path: apps/note-docs-site
+      - uses: actions/download-artifact@v8
+        with:
+          name: docs-dist
+          path: apps/note-docs-site/docs/.vitepress/dist
+      - uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/note-docs-site
+          command: deploy

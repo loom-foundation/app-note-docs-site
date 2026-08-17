@@ -1,0 +1,15 @@
+{
+  "name": "note-theloommethod-org",
+  "compatibility_date": "2026-08-17",
+  "assets": {
+    // docs/.vitepress/dist is the npm run docs:build output, not tracked in git.
+    "directory": "docs/.vitepress/dist"
+  },
+  "routes": [
+    {
+      "pattern": "note.theloommethod.org",
+      // custom_domain makes Cloudflare create the DNS record and certificate itself.
+      "custom_domain": true
+    }
+  ]
+}
