@@ -14,6 +14,17 @@ const require = createRequire(import.meta.url)
 const vueDir = path.dirname(require.resolve('vue/package.json'))
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 
+// Mermaid (via vitepress-plugin-mermaid) imports dayjs and @braintree/sanitize-url as bare specifiers.
+// Neither ships a package.json "exports" map or an ESM build under "main", so Vite's dependency optimiser normally supplies the ESM interop.
+// That optimiser forces both into optimizeDeps.include with no importer, so it resolves them from srcDir instead of this app.
+// srcDir carries no node_modules, so resolution fails and the entries are dropped from optimisation.
+// Each is then served raw once mermaid imports it, and the browser finds no ESM export to satisfy the bare import.
+// dayjs ships an ESM build under esm/;
+// sanitize-url ships none, so its TypeScript source stands in, which Vite already transforms on request.
+// Aliasing each bare specifier to its real source, resolved from this app's own dependency tree, sidesteps the optimiser for both.
+const dayjsEsm = require.resolve('dayjs/esm/index.js')
+const sanitizeUrlSource = require.resolve('@braintree/sanitize-url/src/index.ts')
+
 // The workspace root, found by walking up for the west manifest that marks it.
 // The docs source is a sibling repository, so it is reached through the root
 // rather than by counting levels from this file: a checkout of this repository
@@ -135,6 +146,8 @@ export default withMermaid({
       alias: [
         { find: /^vue$/, replacement: path.join(vueDir, 'dist/vue.runtime.esm-bundler.js') },
         { find: /^vue\/server-renderer$/, replacement: path.join(vueDir, 'server-renderer/index.mjs') },
+        { find: /^dayjs$/, replacement: dayjsEsm },
+        { find: /^@braintree\/sanitize-url$/, replacement: sanitizeUrlSource },
       ],
     },
   },
