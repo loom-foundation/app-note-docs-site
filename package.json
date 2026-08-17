@@ -4,7 +4,7 @@
   "scripts": {
     "predocs:dev": "node scripts/copy-brand-assets.mjs",
     "docs:dev": "vitepress dev docs",
-    "predocs:build": "node scripts/copy-brand-assets.mjs",
+    "predocs:build": "node scripts/copy-brand-assets.mjs && node scripts/render-social-card.mjs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "social-card": "node scripts/render-social-card.mjs"

@@ -85,3 +85,6 @@ docs/.vitepress/public/favicon.svg
 docs/.vitepress/public/note-loom-wordmark.svg
 docs/.vitepress/public/note-loom-wordmark-inverted.svg
 docs/.vitepress/public/apple-touch-icon.png
+
+# ── Social card (drawn by scripts/render-social-card.mjs) ─
+docs/.vitepress/public/note-social-card.png
