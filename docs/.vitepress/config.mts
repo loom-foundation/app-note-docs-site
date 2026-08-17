@@ -40,7 +40,7 @@ const siteHostname = 'https://note.theloommethod.org'
 // The site description: the home page's own description and the fallback for
 // any page without one, written once here rather than authored again per page.
 const siteDescription =
-  'Note is a method for capturing intent and specifications as structured plain markdown. Anyone with file access (human or AI) can participate, read, and write.'
+  'Note is a method for capturing intent and specifications in structured markdown. Anyone with file access (human or AI) can participate, read, and write.'
 
 // Mirrors VitePress's own sitemap URL derivation (the home page collapses to
 // the site root, every other page keeps its .html extension), so canonical
