@@ -38,9 +38,7 @@ html.dark {
   font-size: 18px;
 }
 
-/* Landing hero name gradient colours, and the shadow the wordmark casts:
-   offset, blur, colour. The social card reads the shadow from here too, so the
-   card and the page it is a still of are lit the same way. */
+/* Hero name gradient and drop shadow */
 :root {
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
@@ -50,14 +48,6 @@ html.dark {
   );
   --loom-hero-name-shadow: 2px 2px 2px rgba(24, 20, 8, 0.12);
 }
-
-/* The wordmark, lifted off the page by a shadow cast down and to the right.
-   A filter rather than a text-shadow: the gradient above is a background
-   clipped to the glyphs, and a background paints before the text layer a
-   text-shadow belongs to, so that shadow would land on top of the colour it is
-   meant to sit behind and show through the letterforms, which are themselves
-   transparent. A filter takes the element as already drawn and puts its
-   silhouette behind it. */
 .VPHero .heading .name {
   filter: drop-shadow(var(--loom-hero-name-shadow));
 }
@@ -75,10 +65,25 @@ html.dark {
   --vp-button-brand-active-text: var(--loom-button-text);
 }
 
-/* Hero header */
+/* The hero type scale. The wide layout holds the proportions the others are
+   derived from: name 56, header 46, tagline 22. Narrowing the viewport scales
+   the name to 51px and then 34px, and the header and tagline follow by the
+   same ratio, 0.911 and 0.607, line heights included. Sizes below are those
+   products rounded to the nearest pixel, so every width renders one shape at
+   three sizes rather than three scales that drift apart. */
+
+/* Hero header. Both breakpoints match on a wide viewport and the selectors
+   carry equal specificity, so the later block is the one that paints: the
+   ranges have to be written narrowest first for the wider one to win. */
 .VPHero .heading .text {
-  font-size: 26px;
-  line-height: 34px;
+  font-size: 28px;
+  line-height: 33px;
+}
+@media (min-width: 640px) {
+  .VPHero .heading .text {
+    font-size: 42px;
+    line-height: 49px;
+  }
 }
 @media (min-width: 960px) {
   .VPHero .heading .text {
@@ -86,14 +91,35 @@ html.dark {
     line-height: 54px;
   }
 }
-@media (min-width: 640px) {
-  .VPHero .heading .text {
-    font-size: 38px;
-    line-height: 46px;
+
+/* Hero name. From 960px up the wordmark keeps the theme's own size, so both
+   ranges are closed at the top rather than running open-ended: this selector
+   outranks the theme's, and an unbounded rule would follow the wordmark into
+   the wide layout and hold it at the size meant for a phone. */
+@media (width < 640px) {
+  .VPHero .heading .name {
+    font-size: 34px;
+    line-height: 39px;
+  }
+}
+@media (640px <= width < 960px) {
+  .VPHero .heading .name {
+    font-size: 51px;
+    line-height: 58px;
   }
 }
 
-/* Hero tagline */
+/* Hero tagline. Equal specificity with the theme's own rule, so these carry
+   only by loading after it, and the narrow range is closed at the top to
+   leave the wide one standing. Below 640px the tagline steps out of the
+   scale and holds the theme's 18px: the ratio would put it at 13px, under
+   the size at which body copy stays comfortable to read on a phone. */
+@media (640px <= width < 960px) {
+  .VPHero .tagline {
+    font-size: 20px;
+    line-height: 29px;
+  }
+}
 @media (min-width: 960px) {
   .VPHero .tagline {
     font-size: 22px;
