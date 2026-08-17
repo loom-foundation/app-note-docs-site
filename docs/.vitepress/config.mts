@@ -151,6 +151,7 @@ export default withMermaid({
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
       { text: 'Reference', link: '/reference/the-note-file' },
+      { text: 'Manifesto', link: 'https://theloommanifesto.org/' },
       {
         text: '0.9.0',
         items: [
