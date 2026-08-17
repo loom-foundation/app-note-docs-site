@@ -21,44 +21,29 @@
 
 <style scoped>
 /* A radial mask dissolves the bitmap's square edge into the page. The stops
-   are measured against the nearest side, so the fade completes just inside
-   every straight edge and no side or corner ever meets the page. Holding
-   full opacity to 82% keeps the Bernoulli diagram intact and confines the
-   fade to a narrow band. */
+   are measured against the nearest side, so the fade completes well inside
+   every straight edge and no side or corner ever meets the page. */
 .note-g {
   -webkit-mask-image: radial-gradient(
     closest-side circle at 50% 50%,
-    #000 82%,
-    rgba(0, 0, 0, 0.15) 92%,
+    #000 54%,
+    rgba(0, 0, 0, 0.5) 74%,
+    rgba(0, 0, 0, 0.12) 88%,
     transparent 99%
   );
   mask-image: radial-gradient(
     closest-side circle at 50% 50%,
-    #000 82%,
-    rgba(0, 0, 0, 0.15) 92%,
+    #000 54%,
+    rgba(0, 0, 0, 0.5) 74%,
+    rgba(0, 0, 0, 0.12) 88%,
     transparent 99%
   );
 }
 
-/* The artwork sits on cream paper, so on a dark page the same fade leaves a
-   bright disc with a visible halo where the paper meets the background. The
-   dark theme therefore starts the fade further in and runs it longer, and
-   dims the paper toward the page, so the edge dissolves rather than glows. */
+/* The artwork sits on cream paper, which reads as a lit disc against a dark
+   page. The dark theme dims it toward the background so the masked edge
+   dissolves rather than glows. */
 html.dark .note-g {
-  -webkit-mask-image: radial-gradient(
-    closest-side circle at 50% 50%,
-    #000 54%,
-    rgba(0, 0, 0, 0.5) 74%,
-    rgba(0, 0, 0, 0.12) 88%,
-    transparent 99%
-  );
-  mask-image: radial-gradient(
-    closest-side circle at 50% 50%,
-    #000 54%,
-    rgba(0, 0, 0, 0.5) 74%,
-    rgba(0, 0, 0, 0.12) 88%,
-    transparent 99%
-  );
   filter: brightness(0.82) contrast(1.04);
 }
 </style>
