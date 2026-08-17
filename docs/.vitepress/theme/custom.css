@@ -1,6 +1,6 @@
-/* Loom theme touches on top of the default theme. Nothing here replaces
-   default styling; it only adds the brand wordmark constraint and the
-   GitHub-style alert title icons. */
+/* Loom theme touches on top of the default theme: the brand wordmark
+   constraint, the landing hero's heading gradient, and the GitHub-style
+   alert title icons. */
 
 /* Navbar wordmark: never taller than the line box the "Note" site title
    occupied (16px font in the theme's 24px line height). 24px is also the
@@ -23,7 +23,7 @@
    the "Note" heading through the theme's own variables. */
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(12deg, #D600FF 10%, #00E5FF);
+  --vp-home-hero-name-background: linear-gradient(320deg, #6D67AC 10%, #C274A8);
 }
 
 /* The icon paths below come from GitHub's Octicons (MIT licence); see
