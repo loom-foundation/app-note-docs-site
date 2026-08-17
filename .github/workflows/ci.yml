@@ -1,17 +1,20 @@
 name: checks
 
-# The site's content comes from corpus-note. A workflow sends corpus-updated when
-# main moves, and that rebuilds and redeploys exactly as a push or merge in this
-# repository would.
-# workflow_dispatch does the same by hand, from the Actions tab or `gh workflow
-# run`, for when a deploy is wanted without a PR merge to wait for.
+# The site's content comes from corpus-note, which cannot push here. Its
+# workflow asks this one to run when the docs it holds move, and a run started
+# that way rebuilds and redeploys exactly as a push or merge here would. The
+# same trigger serves a person: the Actions tab, or `gh workflow run checks.yml
+# --ref main`, for when a deploy is wanted without a merge to wait for.
+#
+# Being asked to run, rather than being sent an event of its own, is what keeps
+# the corpus's token to permission over runs alone. A repository dispatch would
+# have required write access to everything in this repository to send the same
+# request.
 on:
   pull_request:
   push:
     branches: [main]
   workflow_dispatch:
-  repository_dispatch:
-    types: [corpus-updated]
 
 # This application depends on the following repositories:
 # - workspace: List of repositories and their placement
@@ -53,7 +56,7 @@ jobs:
     needs: build
     if: >-
       github.ref == 'refs/heads/main' &&
-      contains(fromJSON('["push", "repository_dispatch", "workflow_dispatch"]'), github.event_name)
+      contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name)
     runs-on: ubuntu-latest
     permissions:
       contents: read
