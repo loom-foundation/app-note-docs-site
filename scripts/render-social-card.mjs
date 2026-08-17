@@ -10,16 +10,20 @@
 // declares them, so a reworded hero reaches the card on the next render and
 // the two cannot say different things.
 //
-// The PNG is tracked rather than built with the site. It changes only when the
-// card is redesigned, and generating it needs a browser binary the site build
-// otherwise has no use for.
+// The PNG is build output, not source: `predocs:build` runs this script, so an
+// ordinary `npm run docs:build` redraws the card from whatever its inputs now
+// say, and .gitignore keeps the result out of the repository. `npm run
+// social-card` renders it alone.
 //
-//   npm run social-card
-//
-// Chromium arrives with Playwright's own download step, which is separate from
-// npm install:
+// Any Chromium will do. Playwright's own, downloaded by a step separate from
+// npm install, is used when it is there:
 //
 //   npx playwright install chromium
+//
+// Otherwise the browser already on the machine stands in, which is what CI
+// uses: the runner image ships a stable Chrome, so the card costs the build no
+// download, no cache and no dependency on a CDN that could be having a bad day
+// while a deploy is waiting.
 import path from 'node:path'
 import { readFile, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
@@ -118,17 +122,28 @@ if (!existsSync(homePage)) {
 
 const copy = heroCopy(await readFile(homePage, 'utf8'))
 
+// Playwright's own Chromium first, since it is pinned to the library's version
+// and renders the same on every machine that has it. Failing that, the stable
+// Chrome already installed, which is how this runs on a machine that never
+// downloaded one and how it runs in CI.
 let browser
 try {
   browser = await chromium.launch()
-} catch (error) {
-  console.error(
-    `${error.message}\n\n` +
-      'Playwright downloads its browsers in a step of its own, which npm install\n' +
-      'does not run:\n\n' +
-      '  npx playwright install chromium\n',
-  )
-  process.exit(1)
+} catch {
+  try {
+    browser = await chromium.launch({ channel: 'chrome' })
+  } catch (error) {
+    fail(
+      error.message,
+      '',
+      'The card is photographed by a browser, and neither Chromium nor Chrome',
+      "could be started. Playwright's own arrives in a step separate from npm",
+      'install:',
+      '',
+      '  npx playwright install chromium',
+      '',
+    )
+  }
 }
 
 const page = await browser.newPage({

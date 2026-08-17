@@ -32,18 +32,20 @@ The words are not written on the page.
 They are read at render time from the hero block of the corpus home page, `corpora/note/docs/index.md`, so a reworded hero reaches the card on the next render.
 The copy in the markup is what the page shows when opened on its own; each block names the frontmatter field it stands for, and a block naming a field the hero does not declare stops the render.
 
-Edit the page, then photograph it:
+The card is build output, not source: `scripts/render-social-card.mjs` runs before `docs:build`, so an ordinary build redraws it from whatever its inputs now say, and `.gitignore` keeps the result untracked.
+Editing the page and building is the whole update cycle; `npm run social-card` renders it alone.
+
+It is photographed by whatever Chromium is on the machine: Playwright's own where it has been fetched, and the system's Chrome otherwise, which is what CI uses.
+Neither is needed to run `docs:dev`, which does not draw the card.
 
 ```sh
-npx playwright install chromium   # once, per machine
+npx playwright install chromium   # optional, pins the browser to Playwright's
 npm run social-card
 ```
-
-The PNG is tracked, so the site build neither renders it nor needs a browser.
 
 ## Continuous integration
 
 `.github/workflows/ci.yml` builds the site on every push and pull request, and deploys `main` to Cloudflare.
 
-It reproduces the west workspace rather than working around it: four checkouts placed at the paths west would place them at, and `west.yml` symlinked to the root so the walk that finds it succeeds.
-A script that reaches a sibling repository therefore reaches it the same way in both places, and nothing in this repository needs to know which one it is running in.
+It assembles the west workspace rather than imitating it: the manifest repository is checked out, `west init -l` registers it, and `west update` places each named project where `west.yml` says it goes.
+The workflow names two projects and nothing else, so a script that reaches a sibling repository reaches it the same way in both places, and the layout stays declared in one file.

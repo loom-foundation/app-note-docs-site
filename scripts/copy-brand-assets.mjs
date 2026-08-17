@@ -7,12 +7,12 @@
 // `npm run docs:build` or `npm run docs:dev` picks them up, and .gitignore
 // keeps the copies out of the repository.
 //
-// The rest of that directory is the opposite arrangement, and this script
-// neither writes nor removes any of it. The WebP the landing hero loads is
-// tracked source, and so is the social card beside it, which
-// scripts/render-social-card.mjs writes on demand. The 1024x1024 PNG master
-// both are cut from is kept out of that directory on purpose: everything under
-// it is published, and 1.8 MB of artwork has no reason to be served.
+// scripts/render-social-card.mjs writes the social card into the same
+// directory on the same hook, and is likewise ignored. The WebP the landing
+// hero loads is the one tracked file there. The 1024x1024 PNG master both it
+// and the card are cut from is kept out of that directory on purpose:
+// everything under it is published, and 1.8 MB of artwork has no reason to be
+// served.
 //
 // The source is the sibling `org` checkout in the west workspace, the same
 // assumption `docs/.vitepress/config.mts` already makes of the corpus.
