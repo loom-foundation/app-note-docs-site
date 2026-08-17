@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { existsSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { withMermaid } from 'vitepress-plugin-mermaid'
@@ -12,10 +13,31 @@ const require = createRequire(import.meta.url)
 const vueDir = path.dirname(require.resolve('vue/package.json'))
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 
+// The workspace root, found by walking up for the west manifest that marks it.
+// The docs source is a sibling repository, so it is reached through the root
+// rather than by counting levels from this file: a checkout of this repository
+// sits at apps/<name> and a worktree of it sits under tmp/worktrees/<name>, and
+// a relative climb that lands on the root from one lands short from the other,
+// finding nothing and building an empty site.
+function workspaceRoot(from: string): string {
+  for (let dir = from; ; ) {
+    if (existsSync(path.join(dir, 'west.yml'))) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) {
+      throw new Error(
+        `No west.yml above ${from}. The docs source is a sibling repository in ` +
+          'the west workspace, so this app has to be built inside a checkout of it.',
+      )
+    }
+    dir = parent
+  }
+}
+
+const corpusDocs = path.join(workspaceRoot(configDir), 'corpora/note/docs')
+
 // The docs SOURCE lives in the Note corpus (corpora/note/docs in the west
-// workspace, three levels up from this project root); this repository is
-// only the disposable renderer. srcDir points at the corpus in place, so
-// the markdown is never moved or copied here.
+// workspace); this repository is only the disposable renderer. srcDir points
+// at the corpus in place, so the markdown is never moved or copied here.
 //
 // Two recorded accommodations (bake-off report):
 // 1. markdown-it-attrs disabled, so brace text in prose stays literal.
@@ -27,7 +49,7 @@ const configDir = path.dirname(fileURLToPath(import.meta.url))
 // whoever maintains the corpus. Neither is a page for a reader.
 export default withMermaid({
   title: 'Note',
-  srcDir: '../../../corpora/note/docs',
+  srcDir: corpusDocs,
   // Static assets ship from this app, not the corpus: Vite's public dir
   // would default to srcDir/public (inside the protected corpus checkout),
   // so it is pinned to this app's own docs/.vitepress/public instead.

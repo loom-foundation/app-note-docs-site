@@ -20,11 +20,33 @@
 // project that carries them rather than for the brand they came from.
 import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-// This repository sits at apps/<name> in the workspace, so `org` is two levels up.
-const sourceDir = path.resolve(repoRoot, '../../org/brand/assets')
+
+// The workspace root, found by walking up for the west manifest that marks it.
+// `org` is a sibling repository, so it is reached through the root rather than
+// by counting levels from here: a checkout of this repository sits at
+// apps/<name> and a worktree of it sits under tmp/worktrees/<name>, and a
+// relative climb that lands on the root from one lands short from the other.
+function workspaceRoot(from) {
+  for (let dir = from; ; ) {
+    if (existsSync(path.join(dir, 'west.yml'))) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) {
+      console.error(
+        `No west.yml above ${from}.\n` +
+          'The brand assets live in a sibling repository in the west workspace,\n' +
+          'so this script has to run inside a checkout of it.',
+      )
+      process.exit(1)
+    }
+    dir = parent
+  }
+}
+
+const sourceDir = path.join(workspaceRoot(repoRoot), 'org/brand/assets')
 const targetDir = path.join(repoRoot, 'docs/.vitepress/public')
 const themeCss = path.join(repoRoot, 'docs/.vitepress/theme/custom.css')
 
