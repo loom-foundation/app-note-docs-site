@@ -1,6 +1,4 @@
-/* Loom theme touches on top of the default theme: the project's palette, the
-   brand wordmark constraint, the landing hero's heading gradient, and the
-   GitHub-style alert title icons. */
+/* Loom theme touches on top of the default theme */
 
 /* The project's palette. Two colours drawn from Ada Lovelace's dress in the
    hero artwork, and a third for the buttons that sit beside them. The heading,
@@ -62,8 +60,7 @@ html.dark {
   font-size: 18px;
 }
 
-/* Landing hero name, vitepress.dev-style: the project's two colours clipped to
-   the "Note" heading through the theme's own variables. */
+/* Landing hero name gradient colours. */
 :root {
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
@@ -120,6 +117,17 @@ html.dark {
   .VPHero .tagline {
     font-size: 22px;
     line-height: 32px;
+  }
+}
+
+/* The hero artwork, lowered where it stands beside the text. The theme centres
+   it in its own column, which reads high against a heading, a second level and
+   a tagline stacked to its left. It moves only at the width where that column
+   exists; below it the artwork sits above the text and the theme's centring is
+   right. Nothing in the chain clips, so the artwork moves rather than crops. */
+@media (min-width: 960px) {
+  .VPHero .image-src {
+    top: 60%;
   }
 }
 
