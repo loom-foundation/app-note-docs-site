@@ -1,9 +1,18 @@
 name: checks
 
+# The site's words come from corpus-note, which cannot push here, so a merge
+# there would otherwise leave the published site behind until something
+# unrelated landed in this repository. Its workflow sends corpus-updated when
+# main moves, and that rebuilds and redeploys exactly as a push here would.
+# workflow_dispatch does the same by hand, from the Actions tab or `gh workflow
+# run`, for when a deploy is wanted without a change to wait for.
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [corpus-updated]
 
 jobs:
   build:
@@ -39,7 +48,11 @@ jobs:
 
   deploy:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Every way of arriving at main publishes it: a merge here, a merge in the
+    # corpus, or a hand-started run. A pull request builds and stops.
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      contains(fromJSON('["push", "repository_dispatch", "workflow_dispatch"]'), github.event_name)
     runs-on: ubuntu-latest
     permissions:
       contents: read
