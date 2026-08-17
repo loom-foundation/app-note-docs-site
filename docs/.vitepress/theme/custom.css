@@ -1,32 +1,32 @@
 /* Loom theme touches on top of the default theme */
 
-/* The project's palette. Two colours drawn from Ada Lovelace's dress in the
-   hero artwork, and a third for the buttons that sit beside them. The heading,
-   the buttons and the wordmark's infinity read these, so a project is
+/* The project's palette: three stops drawn from Ada Lovelace's dress in the
+   hero artwork, running dark to light. The wordmark's infinity takes all
+   three, and the heading gradient takes the outer two, so a project is
    recoloured here and nowhere else.
 
-   scripts/copy-brand-assets.mjs parses the four values below, so they stay
+   scripts/copy-brand-assets.mjs parses the three values below, so they stay
    plain six-digit hexes: the wordmark is recoloured as it is copied in, the
    only route to a mark that a page's stylesheet cannot reach inside. */
 :root {
   --loom-accent-1: #605AA1;
-  --loom-accent-2: #C274A8;
-  --loom-accent-3: #8192A2;
+  /* The middle stop, the outer two mixed in oklab and written out rather than
+     computed, since the copy step substitutes literals and CSS is not there to
+     resolve a colour-mix for it. The heading skips it: a two-stop sweep reads
+     cleaner across a short word than a three-stop one. */
+  --loom-accent-2: #9168A5;
+  --loom-accent-3: #C274A8;
 
-  /* The infinity's gradient runs three stops. This is the first two mixed in
-     oklab, written out rather than computed, since the copy step substitutes
-     literals and CSS is not there to resolve a colour-mix for it. */
-  --loom-accent-mid: #9168A5;
+  /* The buttons stand on a slate, #8192A2, drawn from the artwork beside the
+     three stops above but not one of them: nothing else reads it, so it is
+     not a token. A mid tone caps how far any text on it can get, parchment
+     reaching 2.9:1 and even pure black stopping at 6.6:1, against the 10:1
+     the secondary button runs at. So the slate is carried one step toward
+     each end of the theme instead, once toward ink for the light page and
+     once toward parchment for the dark, and the text turns over with it.
+     Written out rather than mixed, so the ratios below are the ones that ship.
 
-  /* The button colour is a mid tone, and a mid tone caps how far any text on
-     it can get: parchment reaches 2.9:1 and even pure black stops at 6.6:1,
-     against the 10:1 the secondary button runs at. So the third colour is
-     carried one step toward each end of the theme instead, once toward ink
-     for the light page and once toward parchment for the dark, and the text
-     turns over with it. Written out rather than mixed, so the ratios below
-     are the ones that ship.
-
-     Light: #4B5C75 is the third colour 45% toward ink, 6.2:1 under parchment.
+     Light: #4B5C75 is the slate 45% toward ink, 6.2:1 under parchment.
      Hover and press carry it further the same way, to 7.0:1 and 7.7:1, so the
      contrast climbs as the reader engages with it rather than thinning. */
   --loom-button-bg: #4b5c75;
@@ -36,7 +36,7 @@
 }
 
 html.dark {
-  /* Dark: #9EAAB5 is the third colour 25% toward parchment, 7.2:1 under ink,
+  /* Dark: #9EAAB5 is the slate 25% toward parchment, 7.2:1 under ink,
      rising to 8.0:1 and 8.6:1 as it lightens further. */
   --loom-button-bg: #9eaab5;
   --loom-button-hover-bg: #a9b3bc;
@@ -66,7 +66,7 @@ html.dark {
   --vp-home-hero-name-background: linear-gradient(
     320deg,
     var(--loom-accent-1) 10%,
-    var(--loom-accent-2)
+    var(--loom-accent-3)
   );
 }
 
