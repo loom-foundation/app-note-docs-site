@@ -63,8 +63,8 @@ const recoloured = [
 // here, so recolouring the site stays a matter of editing custom.css.
 const stops = [
   { house: '#00E5FF', token: '--loom-accent-1' },
-  { house: '#8A2BE2', token: '--loom-accent-mid' },
-  { house: '#D600FF', token: '--loom-accent-2' },
+  { house: '#8A2BE2', token: '--loom-accent-2' },
+  { house: '#D600FF', token: '--loom-accent-3' },
 ]
 
 const missing = []
