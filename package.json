@@ -2,7 +2,9 @@
   "name": "app-note-docs-site",
   "private": true,
   "scripts": {
+    "predocs:dev": "node scripts/copy-brand-assets.mjs",
     "docs:dev": "vitepress dev docs",
+    "predocs:build": "node scripts/copy-brand-assets.mjs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
