@@ -65,13 +65,7 @@ html.dark {
   --vp-button-brand-active-text: var(--loom-button-text);
 }
 
-/* The hero type scale. The wide layout holds the proportions the others are
-   derived from: name 56, header 46, tagline 22. Narrowing the viewport scales
-   the name to 51px and then 34px, and the header and tagline follow by the
-   same ratio, 0.911 and 0.607, line heights included. Sizes below are those
-   products rounded to the nearest pixel, so every width renders one shape at
-   three sizes rather than three scales that drift apart. */
-
+/* Hero type scale */
 /* Hero header. Both breakpoints match on a wide viewport and the selectors
    carry equal specificity, so the later block is the one that paints: the
    ranges have to be written narrowest first for the wider one to win. */
@@ -91,7 +85,6 @@ html.dark {
     line-height: 54px;
   }
 }
-
 /* Hero name. From 960px up the wordmark keeps the theme's own size, so both
    ranges are closed at the top rather than running open-ended: this selector
    outranks the theme's, and an unbounded rule would follow the wordmark into
@@ -108,7 +101,6 @@ html.dark {
     line-height: 58px;
   }
 }
-
 /* Hero tagline. Equal specificity with the theme's own rule, so these carry
    only by loading after it, and the narrow range is closed at the top to
    leave the wide one standing. Below 640px the tagline steps out of the
