@@ -87,6 +87,16 @@ html.dark {
   --vp-button-brand-active-text: var(--loom-button-text);
 }
 
+/* Mermaid draws a node's label as HTML inside a foreignObject and sizes that
+   box from its own measurement of the text, which comes out a few pixels
+   short of what the page finally paints. A foreignObject clips what overflows
+   it, so the descenders of a second line are cut and "display" reads as
+   "displav". Letting the box overflow paints them: the geometry is untouched,
+   and the space is already inside the diagram's own bounds. */
+.mermaid foreignObject {
+  overflow: visible;
+}
+
 /* The icon paths below come from GitHub's Octicons (MIT licence); see
    THIRD-PARTY-NOTICES.md at the repository root. */
 
