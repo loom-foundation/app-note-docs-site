@@ -79,5 +79,6 @@ package-lock.json
 
 # ── Brand assets (copied from loom-foundation/org by scripts/copy-brand-assets.mjs) ─
 docs/.vitepress/public/favicon.svg
-docs/.vitepress/public/loom-wordmark.svg
-docs/.vitepress/public/loom-wordmark-inverted.svg
+docs/.vitepress/public/note-loom-wordmark.svg
+docs/.vitepress/public/note-loom-wordmark-inverted.svg
+docs/.vitepress/public/apple-touch-icon.png

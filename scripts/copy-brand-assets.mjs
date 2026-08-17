@@ -1,26 +1,74 @@
 // Copies the Foundation brand assets into the VitePress public directory.
 //
-// The favicon and the two wordmarks are owned by loom-foundation/org, which
-// is their single source of truth. They are not tracked here: the npm
-// `predocs:build` and `predocs:dev` hooks run this script, so an ordinary
+// The favicon, the Apple touch icon and the two wordmarks are owned by
+// loom-foundation/org, which is their single source of truth. They are not
+// tracked here: the npm `predocs:build` and `predocs:dev` hooks run this
+// script, so an ordinary
 // `npm run docs:build` or `npm run docs:dev` picks them up, and .gitignore
 // keeps the copies out of the repository.
 //
 // The source is the sibling `org` checkout in the west workspace, the same
 // assumption `docs/.vitepress/config.mts` already makes of the corpus.
-import { copyFile, mkdir, stat } from 'node:fs/promises'
+//
+// The wordmarks arrive recoloured. A browser treats an SVG behind an img tag
+// as its own document, so no stylesheet on the page reaches the gradient
+// inside it, and the infinity would keep the house spectrum whatever the
+// theme declares. Substituting the stops on the way in is the one place the
+// project's colours can reach it. The letterforms are left alone: they are
+// the brand's own ink, navy in one file and parchment in the other.
+//
+// A recoloured mark is not the Loom wordmark, so the copies are named for the
+// project that carries them rather than for the brand they came from.
+import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-// This repository sits at apps/<name> in the workspace, so `org` is two levels up.
-const sourceDir = path.resolve(repoRoot, '../../org/brand/assets')
-const targetDir = path.join(repoRoot, 'docs/.vitepress/public')
 
-const assets = ['favicon.svg', 'loom-wordmark.svg', 'loom-wordmark-inverted.svg']
+// The workspace root, found by walking up for the west manifest that marks it.
+// `org` is a sibling repository, so it is reached through the root rather than
+// by counting levels from here: a checkout of this repository sits at
+// apps/<name> and a worktree of it sits under tmp/worktrees/<name>, and a
+// relative climb that lands on the root from one lands short from the other.
+function workspaceRoot(from) {
+  for (let dir = from; ; ) {
+    if (existsSync(path.join(dir, 'west.yml'))) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) {
+      console.error(
+        `No west.yml above ${from}.\n` +
+          'The brand assets live in a sibling repository in the west workspace,\n' +
+          'so this script has to run inside a checkout of it.',
+      )
+      process.exit(1)
+    }
+    dir = parent
+  }
+}
+
+const sourceDir = path.join(workspaceRoot(repoRoot), 'org/brand/assets')
+const targetDir = path.join(repoRoot, 'docs/.vitepress/public')
+const themeCss = path.join(repoRoot, 'docs/.vitepress/theme/custom.css')
+
+const copied = ['favicon.svg', 'apple-touch-icon.png']
+
+const recoloured = [
+  { from: 'loom-wordmark.svg', to: 'note-loom-wordmark.svg' },
+  { from: 'loom-wordmark-inverted.svg', to: 'note-loom-wordmark-inverted.svg' },
+]
+
+// The house spectrum, in the order the mark's gradient declares it, paired with
+// the token that replaces each stop. Read from the theme rather than repeated
+// here, so recolouring the site stays a matter of editing custom.css.
+const stops = [
+  { house: '#00E5FF', token: '--loom-accent-1' },
+  { house: '#8A2BE2', token: '--loom-accent-mid' },
+  { house: '#D600FF', token: '--loom-accent-2' },
+]
 
 const missing = []
-for (const asset of assets) {
+for (const asset of [...copied, ...recoloured.map((a) => a.from)]) {
   try {
     await stat(path.join(sourceDir, asset))
   } catch {
@@ -45,8 +93,48 @@ if (missing.length > 0) {
   process.exit(1)
 }
 
+const theme = await readFile(themeCss, 'utf8')
+const palette = stops.map(({ house, token }) => {
+  const declared = theme.match(new RegExp(`${token}:\\s*(#[0-9a-fA-F]{6})`))
+  if (!declared) {
+    console.error(
+      `No ${token} found in ${path.relative(repoRoot, themeCss)}.\n` +
+        'The wordmark takes its gradient from the theme\'s palette, so each stop\n' +
+        'needs a plain six-digit hex declared there.',
+    )
+    process.exit(1)
+  }
+  return { house, project: declared[1] }
+})
+
 await mkdir(targetDir, { recursive: true })
-for (const asset of assets) {
+
+for (const asset of copied) {
   await copyFile(path.join(sourceDir, asset), path.join(targetDir, asset))
 }
-console.log(`Copied ${assets.length} brand assets from ${sourceDir}.`)
+
+for (const { from, to } of recoloured) {
+  let markup = await readFile(path.join(sourceDir, from), 'utf8')
+
+  for (const { house, project } of palette) {
+    const occurrences = markup.split(house).length - 1
+    // Silence here would ship the house spectrum and read as a theme bug, so a
+    // mark whose gradient no longer matches stops the build instead.
+    if (occurrences !== 1) {
+      console.error(
+        `Expected one ${house} stop in ${from}, found ${occurrences}.\n` +
+          'The mark\'s gradient has changed upstream. Reconcile the stops in\n' +
+          `${path.relative(repoRoot, fileURLToPath(import.meta.url))} with the asset.`,
+      )
+      process.exit(1)
+    }
+    markup = markup.replace(house, project)
+  }
+
+  await writeFile(path.join(targetDir, to), markup)
+}
+
+console.log(
+  `Copied ${copied.length + recoloured.length} brand assets from ${sourceDir}, ` +
+    `${recoloured.length} recoloured from the theme's palette.`,
+)

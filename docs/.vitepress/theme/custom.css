@@ -1,6 +1,50 @@
-/* Loom theme touches on top of the default theme: the brand wordmark
-   constraint, the landing hero's heading gradient, and the GitHub-style
-   alert title icons. */
+/* Loom theme touches on top of the default theme: the project's palette, the
+   brand wordmark constraint, the landing hero's heading gradient, and the
+   GitHub-style alert title icons. */
+
+/* The project's palette. Two colours drawn from Ada Lovelace's dress in the
+   hero artwork, and a third for the buttons that sit beside them. The heading,
+   the buttons and the wordmark's infinity read these, so a project is
+   recoloured here and nowhere else.
+
+   scripts/copy-brand-assets.mjs parses the four values below, so they stay
+   plain six-digit hexes: the wordmark is recoloured as it is copied in, the
+   only route to a mark that a page's stylesheet cannot reach inside. */
+:root {
+  --loom-accent-1: #605AA1;
+  --loom-accent-2: #C274A8;
+  --loom-accent-3: #8192A2;
+
+  /* The infinity's gradient runs three stops. This is the first two mixed in
+     oklab, written out rather than computed, since the copy step substitutes
+     literals and CSS is not there to resolve a colour-mix for it. */
+  --loom-accent-mid: #9168A5;
+
+  /* The button colour is a mid tone, and a mid tone caps how far any text on
+     it can get: parchment reaches 2.9:1 and even pure black stops at 6.6:1,
+     against the 10:1 the secondary button runs at. So the third colour is
+     carried one step toward each end of the theme instead, once toward ink
+     for the light page and once toward parchment for the dark, and the text
+     turns over with it. Written out rather than mixed, so the ratios below
+     are the ones that ship.
+
+     Light: #4B5C75 is the third colour 45% toward ink, 6.2:1 under parchment.
+     Hover and press carry it further the same way, to 7.0:1 and 7.7:1, so the
+     contrast climbs as the reader engages with it rather than thinning. */
+  --loom-button-bg: #4b5c75;
+  --loom-button-hover-bg: #43546e;
+  --loom-button-active-bg: #3d4e69;
+  --loom-button-text: #f6f4ee;
+}
+
+html.dark {
+  /* Dark: #9EAAB5 is the third colour 25% toward parchment, 7.2:1 under ink,
+     rising to 8.0:1 and 8.6:1 as it lightens further. */
+  --loom-button-bg: #9eaab5;
+  --loom-button-hover-bg: #a9b3bc;
+  --loom-button-active-bg: #b1bac2;
+  --loom-button-text: #0a1b3d;
+}
 
 /* Navbar wordmark: never taller than the line box the "Note" site title
    occupied (16px font in the theme's 24px line height). 24px is also the
@@ -18,12 +62,75 @@
   font-size: 18px;
 }
 
-/* Landing hero name, vitepress.dev-style: the brand gradient (Electric
-   Cyan to Vibrant Magenta, per org/brand/assets/loom-logo.md) clipped to
+/* Landing hero name, vitepress.dev-style: the project's two colours clipped to
    the "Note" heading through the theme's own variables. */
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(320deg, #6D67AC 10%, #C274A8);
+  --vp-home-hero-name-background: linear-gradient(
+    320deg,
+    var(--loom-accent-1) 10%,
+    var(--loom-accent-2)
+  );
+}
+
+/* Hero buttons, through the theme's own variables. Both themes are keyed above,
+   so this mapping is written once and neither end is a special case. */
+:root {
+  --vp-button-brand-bg: var(--loom-button-bg);
+  --vp-button-brand-border: var(--loom-button-bg);
+  --vp-button-brand-text: var(--loom-button-text);
+  --vp-button-brand-hover-bg: var(--loom-button-hover-bg);
+  --vp-button-brand-hover-border: var(--loom-button-hover-bg);
+  --vp-button-brand-hover-text: var(--loom-button-text);
+  --vp-button-brand-active-bg: var(--loom-button-active-bg);
+  --vp-button-brand-active-border: var(--loom-button-active-bg);
+  --vp-button-brand-active-text: var(--loom-button-text);
+}
+
+/* The hero's second level. The theme sets one rule for the name and the text
+   beside it, so both arrive at the same size and the pair reads as one
+   heading in two colours. Stepping the text down to roughly four fifths
+   makes the name the first level and the text the second, and the ladder
+   follows the theme's own three widths so the proportion holds at each. */
+.VPHero .heading .text {
+  font-size: 26px;
+  line-height: 34px;
+}
+
+@media (min-width: 640px) {
+  .VPHero .heading .text {
+    font-size: 38px;
+    line-height: 46px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .heading .text {
+    font-size: 46px;
+    line-height: 54px;
+  }
+}
+
+/* The hero's third level. The theme runs it at 24px on a 36px line, which
+   sits closer to the second level than the step between the first two; a
+   shorter line and a smaller face settle it as the subordinate line it is.
+   Declared at the widest step alone, where the three levels are read
+   together; the narrower steps keep the theme's own sizes. */
+@media (min-width: 960px) {
+  .VPHero .tagline {
+    font-size: 22px;
+    line-height: 32px;
+  }
+}
+
+/* Mermaid draws a node's label as HTML inside a foreignObject and sizes that
+   box from its own measurement of the text, which comes out a few pixels
+   short of what the page finally paints. A foreignObject clips what overflows
+   it, so the descenders of a second line are cut and "display" reads as
+   "displav". Letting the box overflow paints them: the geometry is untouched,
+   and the space is already inside the diagram's own bounds. */
+.mermaid foreignObject {
+  overflow: visible;
 }
 
 /* The icon paths below come from GitHub's Octicons (MIT licence); see
