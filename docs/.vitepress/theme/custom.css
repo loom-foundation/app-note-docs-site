@@ -1,6 +1,6 @@
-/* Loom theme touches on top of the default theme. Nothing here replaces
-   default styling; it only adds the brand wordmark constraint and the
-   GitHub-style alert title icons. */
+/* Loom theme touches on top of the default theme: the brand wordmark
+   constraint, the landing hero's artwork placement, and the GitHub-style
+   alert title icons. */
 
 /* Navbar wordmark: never taller than the line box the "Note" site title
    occupied (16px font in the theme's 24px line height). 24px is also the
@@ -24,6 +24,66 @@
 :root {
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(320deg, #6D67AC 10%, #C274A8);
+}
+
+/* Landing hero artwork: a fixed 208px of empty space between the text column
+   and the artwork, wherever the two sit side by side.
+
+   The text column is 592px wide at every side-by-side width and the artwork
+   renders 320px square, so the pair needs 592 + 208 + 320 = 1120px of the
+   hero's content box. That box is the window less 64px of hero padding on each
+   side, until it reaches the container's 1152px cap, so the pair stops fitting
+   below a 1248px window. From there down the artwork sits above the heading,
+   which is what the default theme does below 960px. */
+@media (min-width: 1248px) {
+  /* Placed from the left edge of the artwork's own column, which is the text
+     column's right edge, so the space between the two is the same at every
+     width. The column is fluid until the container caps, so an offset taken
+     from its centre or its right edge would instead walk the artwork sideways
+     on a resize. 240px is the 208px space plus the 32px the theme insets the
+     column by. The vertical shift drops the artwork's top to the heading's. */
+  .VPHero.has-image .note-g {
+    left: 240px;
+    transform: translateY(calc(-50% + 51px));
+  }
+}
+
+/* The stacked hero, held from the theme's own 960px breakpoint up to the width
+   where the artwork fits beside the text. The theme's side-by-side rules are
+   undone rather than restated: the column returns to a single stack, the text
+   block centres itself and its contents, and the artwork's column takes a
+   height of its own, since stacked it no longer borrows the text's. */
+@media (min-width: 960px) and (max-width: 1247.98px) {
+  .VPHero.has-image .container {
+    flex-direction: column;
+  }
+
+  .VPHero.has-image .main {
+    order: 2;
+    width: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .VPHero.has-image .heading {
+    align-items: center;
+  }
+
+  /* 320px of artwork in 352px of column: the 16px above and below it match the
+     breathing room the theme leaves around the stacked artwork below 960px. */
+  .VPHero.has-image .image {
+    order: 1;
+    height: 352px;
+  }
+
+  /* The theme insets the artwork's column by 32px to tuck it against the text
+     beside it; stacked, there is nothing to tuck against. */
+  .VPHero.has-image .image-container {
+    transform: none;
+  }
 }
 
 /* GitHub-style alert headers: the octicon GitHub pairs with each alert type,

@@ -1,7 +1,9 @@
 <!-- The landing hero's artwork: Ada Lovelace's Note G, linked to its story.
      The corpus's index.md frontmatter cannot express a linked image, so the
      default theme's home-hero-image slot carries it instead. The img keeps
-     the theme's own `image-src` class, so sizing stays the default theme's. -->
+     the theme's own `image-src` class, so sizing stays the default theme's.
+     Only the fade lives here; the artwork's placement sits in custom.css,
+     beside the stacked layout it switches to. -->
 <template>
   <a
     href="https://en.wikipedia.org/wiki/Note_G"
@@ -59,23 +61,5 @@ html.dark .note-g {
     transparent 99%
   );
   filter: brightness(0.82) contrast(1.04);
-}
-
-/* Above this width the hero is side by side and the container is capped, so
-   every edge here is fixed; below it the hero stacks and the theme's own
-   centring stands. custom.css carries the matching collapse.
-
-   The artwork is placed from the left edge of its column, which is the text
-   column's right edge, so the distance between text and artwork is the same
-   at every width. Placing it from the column's centre or its right edge ties
-   it to the column's width, and the column is fluid below the cap, which is
-   what walked the artwork sideways on a resize. */
-@media (min-width: 1280px) {
-  .note-g {
-    top: 50%;
-    left: 240px;
-    right: auto;
-    transform: translateY(calc(-50% + 51px));
-  }
 }
 </style>
