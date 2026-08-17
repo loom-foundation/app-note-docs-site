@@ -61,24 +61,20 @@ html.dark .note-g {
   filter: brightness(0.82) contrast(1.04);
 }
 
-/* Above this width the theme sets the hero side by side; below it the hero
-   stacks and the theme's own centring stands.
+/* Above this width the hero is side by side and the container is capped, so
+   every edge here is fixed; below it the hero stacks and the theme's own
+   centring stands. custom.css carries the matching collapse.
 
-   The artwork is pinned to the right edge of its column rather than offset
-   from the column's centre. The column is fluid between this breakpoint and
-   the container's 1152px cap, so a centre offset slides the artwork sideways
-   as the window widens. Pinned to the edge it holds still against the rest
-   of the hero at every width, exactly as the heading holds the left edge,
-   and the only movement left is the stack when the hero collapses.
-
-   The column carries a 32px inset the artwork does not want, so the pin
-   reaches past it and the artwork's right edge meets the content's, in line
-   with the feature cards below. */
-@media (min-width: 960px) {
+   The artwork is placed from the left edge of its column, which is the text
+   column's right edge, so the distance between text and artwork is the same
+   at every width. Placing it from the column's centre or its right edge ties
+   it to the column's width, and the column is fluid below the cap, which is
+   what walked the artwork sideways on a resize. */
+@media (min-width: 1280px) {
   .note-g {
     top: 50%;
-    left: auto;
-    right: -32px;
+    left: 240px;
+    right: auto;
     transform: translateY(calc(-50% + 51px));
   }
 }
