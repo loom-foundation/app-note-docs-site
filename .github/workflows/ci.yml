@@ -1,0 +1,37 @@
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    # Four repositories are checked out to mirror the west workspace: this one under test, corpus-note for the docs source, org for the brand assets copied in at build time, and workspace, whose west.yml marks the root and is symlinked into place.
+    # Both siblings are found by walking up for that file.
+    # The corpus is built at main, since that is what the site renders once this change merges.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: apps/note-docs-site
+      - uses: actions/checkout@v7
+        with:
+          repository: loom-foundation/corpus-note
+          path: corpora/note
+      - uses: actions/checkout@v7
+        with:
+          repository: loom-foundation/org
+          path: org
+      - uses: actions/checkout@v7
+        with:
+          repository: loom-foundation/workspace
+          path: workspace
+      - run: ln -s workspace/west.yml west.yml
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: npm install
+        working-directory: apps/note-docs-site
+      - run: npm run docs:build
+        working-directory: apps/note-docs-site
