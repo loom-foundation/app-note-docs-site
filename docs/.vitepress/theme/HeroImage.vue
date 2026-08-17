@@ -64,16 +64,22 @@ html.dark .note-g {
 /* Above this width the theme sets the hero side by side; below it the hero
    stacks and the theme's own centring stands.
 
-   The artwork is displaced from the container's centre in pixels rather than
-   percentages. Between this breakpoint and the container's 1152px cap the
-   container is fluid, so a percentage offset would slide the artwork further
-   right as the window widens; a pixel offset holds it against the heading at
-   every width and simply collapses when the hero stacks. */
+   The artwork is pinned to the right edge of its column rather than offset
+   from the column's centre. The column is fluid between this breakpoint and
+   the container's 1152px cap, so a centre offset slides the artwork sideways
+   as the window widens. Pinned to the edge it holds still against the rest
+   of the hero at every width, exactly as the heading holds the left edge,
+   and the only movement left is the stack when the hero collapses.
+
+   The column carries a 32px inset the artwork does not want, so the pin
+   reaches past it and the artwork's right edge meets the content's, in line
+   with the feature cards below. */
 @media (min-width: 960px) {
   .note-g {
     top: 50%;
-    left: 50%;
-    transform: translate(calc(-50% + 56px), calc(-50% + 51px));
+    left: auto;
+    right: -32px;
+    transform: translateY(calc(-50% + 51px));
   }
 }
 </style>
