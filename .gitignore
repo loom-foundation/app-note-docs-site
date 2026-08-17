@@ -49,6 +49,9 @@ $RECYCLE.BIN/
 
 # ── Node ─────────────────────────────────────────────────────────────────────
 node_modules/
+# and as a symlink, which the pattern above does not match: a worktree is
+# given the main checkout's dependencies rather than its own copy.
+node_modules
 npm-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
