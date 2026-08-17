@@ -1,11 +1,10 @@
 name: checks
 
-# The site's words come from corpus-note, which cannot push here, so a merge
-# there would otherwise leave the published site behind until something
-# unrelated landed in this repository. Its workflow sends corpus-updated when
-# main moves, and that rebuilds and redeploys exactly as a push here would.
+# The site's content comes from corpus-note. A workflow sends corpus-updated when
+# main moves, and that rebuilds and redeploys exactly as a push or merge in this
+# repository would.
 # workflow_dispatch does the same by hand, from the Actions tab or `gh workflow
-# run`, for when a deploy is wanted without a change to wait for.
+# run`, for when a deploy is wanted without a PR merge to wait for.
 on:
   pull_request:
   push:
@@ -14,25 +13,28 @@ on:
   repository_dispatch:
     types: [corpus-updated]
 
+# This application depends on the following repositories:
+# - workspace: List of repositories and their placement
+# - corpus-note: Site content
+# - org: Brand assets
 jobs:
   build:
-    # The site is built inside a west workspace, because that is what it reads: the docs come from corpus-note and the brand assets from org, each found by walking up for west's .west marker and descending from there.
-    # Rather than mirror that layout by hand, the manifest repository is checked out and west is left to do it: `west init -l` registers the workspace, and `west update` places each named project at the path and revision the manifest declares.
-    # Only the project names appear below. Where they land, and at which revision, stays in west.yml where it belongs.
-    # west is held to a minor series: unpinned, a release of it could stop every build here without a line changing in any Loom repository.
-    # The card the site carries is drawn during the build, by the Chrome the runner image already ships. Nothing installs a browser.
     runs-on: ubuntu-latest
     steps:
+      # Check out note-docs-site via actions/checkout, so it lands on the exact PR/push ref being tested.
       - uses: actions/checkout@v7
         with:
           path: apps/note-docs-site
+      # Check out the workspace, so other repositories this application depends on can be cloned.
       - uses: actions/checkout@v7
         with:
           repository: loom-foundation/workspace
           path: workspace
-      - run: pipx install 'west~=1.5'
+      # Rebuild the workspace structure (only relevant repos), so that relative paths or references across repos work.
+      - run: pipx install west
       - run: west init -l workspace
       - run: west update --narrow -o=--depth=1 corpus-note org
+      # Install Node and build the static site.
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -46,10 +48,9 @@ jobs:
           path: apps/note-docs-site/docs/.vitepress/dist
           retention-days: 1
 
+# Deployments are triggered on merges to this repository (site changes), merges to the corpus-note repository (content changes), or a manual action (workflow) triggered via GitHub.
   deploy:
     needs: build
-    # Every way of arriving at main publishes it: a merge here, a merge in the
-    # corpus, or a hand-started run. A pull request builds and stops.
     if: >-
       github.ref == 'refs/heads/main' &&
       contains(fromJSON('["push", "repository_dispatch", "workflow_dispatch"]'), github.event_name)
