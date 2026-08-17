@@ -87,6 +87,30 @@ html.dark {
   --vp-button-brand-active-text: var(--loom-button-text);
 }
 
+/* The hero's second level. The theme sets one rule for the name and the text
+   beside it, so both arrive at the same size and the pair reads as one
+   heading in two colours. Stepping the text down to roughly four fifths
+   makes the name the first level and the text the second, and the ladder
+   follows the theme's own three widths so the proportion holds at each. */
+.VPHero .heading .text {
+  font-size: 26px;
+  line-height: 34px;
+}
+
+@media (min-width: 640px) {
+  .VPHero .heading .text {
+    font-size: 38px;
+    line-height: 46px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .heading .text {
+    font-size: 44px;
+    line-height: 52px;
+  }
+}
+
 /* Mermaid draws a node's label as HTML inside a foreignObject and sizes that
    box from its own measurement of the text, which comes out a few pixels
    short of what the page finally paints. A foreignObject clips what overflows
