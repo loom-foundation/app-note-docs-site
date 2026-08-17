@@ -22,8 +22,9 @@ const configDir = path.dirname(fileURLToPath(import.meta.url))
 // 2. Mermaid via vitepress-plugin-mermaid (withMermaid wraps the config).
 // Dead links fail the build on purpose: the docs are self-contained and
 // never link outside their own tree.
-// docs/examples/ is excluded from the site: example files are data
-// exercised by automated tests, not pages.
+// docs/examples/ and docs/assets/ are excluded from the site: example files
+// are data exercised by automated tests, and the assets note addresses
+// whoever maintains the corpus. Neither is a page for a reader.
 export default withMermaid({
   title: 'Note',
   srcDir: '../../../corpora/note/docs',
@@ -50,7 +51,7 @@ export default withMermaid({
       }
     },
   },
-  srcExclude: ['examples/**'],
+  srcExclude: ['examples/**', 'assets/**'],
   vite: {
     publicDir: path.join(configDir, 'public'),
     resolve: {
