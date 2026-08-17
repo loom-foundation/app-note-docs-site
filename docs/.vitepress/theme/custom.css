@@ -1,60 +1,38 @@
-/* Loom theme touches on top of the default theme */
+/* Loom theme */
 
-/* The project's palette: three stops drawn from Ada Lovelace's dress in the
-   hero artwork, running dark to light. The wordmark's infinity takes all
-   three, and the heading gradient takes the outer two, so a project is
-   recoloured here and nowhere else.
+/* --- Tokens --- */
 
-   scripts/copy-brand-assets.mjs parses the three values below, so they stay
-   plain six-digit hexes: the wordmark is recoloured as it is copied in, the
-   only route to a mark that a page's stylesheet cannot reach inside. */
+/* Gradient */
 :root {
   --loom-accent-1: #605AA1;
-  /* The middle stop, the outer two mixed in oklab and written out rather than
-     computed, since the copy step substitutes literals and CSS is not there to
-     resolve a colour-mix for it. The heading skips it: a two-stop sweep reads
-     cleaner across a short word than a three-stop one. */
   --loom-accent-2: #9168A5;
   --loom-accent-3: #C274A8;
+}
 
-  /* The buttons stand on a slate, #8192A2, drawn from the artwork beside the
-     three stops above but not one of them: nothing else reads it, so it is
-     not a token. A mid tone caps how far any text on it can get, parchment
-     reaching 2.9:1 and even pure black stopping at 6.6:1, against the 10:1
-     the secondary button runs at. So the slate is carried one step toward
-     each end of the theme instead, once toward ink for the light page and
-     once toward parchment for the dark, and the text turns over with it.
-     Written out rather than mixed, so the ratios below are the ones that ship.
-
-     Light: #4B5C75 is the slate 45% toward ink, 6.2:1 under parchment.
-     Hover and press carry it further the same way, to 7.0:1 and 7.7:1, so the
-     contrast climbs as the reader engages with it rather than thinning. */
+/* Buttons (light) */
+:root {
   --loom-button-bg: #4b5c75;
   --loom-button-hover-bg: #43546e;
   --loom-button-active-bg: #3d4e69;
   --loom-button-text: #f6f4ee;
 }
 
+/* Buttons (dark) */
 html.dark {
-  /* Dark: #9EAAB5 is the slate 25% toward parchment, 7.2:1 under ink,
-     rising to 8.0:1 and 8.6:1 as it lightens further. */
   --loom-button-bg: #9eaab5;
   --loom-button-hover-bg: #a9b3bc;
   --loom-button-active-bg: #b1bac2;
   --loom-button-text: #0a1b3d;
 }
 
-/* Navbar wordmark: never taller than the line box the "Note" site title
-   occupied (16px font in the theme's 24px line height). 24px is also the
-   default theme's own logo height; declared explicitly so the constraint
-   survives upstream changes. */
+/* --- Elements --- */
+
+/* Navbar logo wordmark */
 :root {
   --vp-nav-logo-height: 24px;
 }
 
-/* The word "Note" beside the wordmark: heavier and a step larger than the
-   theme's 16px default. Scoped to the nav title's span so nothing else
-   moves. */
+/* The word "Note" beside the wordmark */
 .VPNavBarTitle .title > span {
   font-weight: 700;
   font-size: 18px;
@@ -70,8 +48,7 @@ html.dark {
   );
 }
 
-/* Hero buttons, through the theme's own variables. Both themes are keyed above,
-   so this mapping is written once and neither end is a special case. */
+/* Hero buttons */
 :root {
   --vp-button-brand-bg: var(--loom-button-bg);
   --vp-button-brand-border: var(--loom-button-bg);
@@ -84,16 +61,17 @@ html.dark {
   --vp-button-brand-active-text: var(--loom-button-text);
 }
 
-/* The hero's second level. The theme sets one rule for the name and the text
-   beside it, so both arrive at the same size and the pair reads as one
-   heading in two colours. Stepping the text down to roughly four fifths
-   makes the name the first level and the text the second, and the ladder
-   follows the theme's own three widths so the proportion holds at each. */
+/* Hero header */
 .VPHero .heading .text {
   font-size: 26px;
   line-height: 34px;
 }
-
+@media (min-width: 960px) {
+  .VPHero .heading .text {
+    font-size: 46px;
+    line-height: 54px;
+  }
+}
 @media (min-width: 640px) {
   .VPHero .heading .text {
     font-size: 38px;
@@ -101,18 +79,7 @@ html.dark {
   }
 }
 
-@media (min-width: 960px) {
-  .VPHero .heading .text {
-    font-size: 46px;
-    line-height: 54px;
-  }
-}
-
-/* The hero's third level. The theme runs it at 24px on a 36px line, which
-   sits closer to the second level than the step between the first two; a
-   shorter line and a smaller face settle it as the subordinate line it is.
-   Declared at the widest step alone, where the three levels are read
-   together; the narrower steps keep the theme's own sizes. */
+/* Hero tagline */
 @media (min-width: 960px) {
   .VPHero .tagline {
     font-size: 22px;
@@ -120,11 +87,7 @@ html.dark {
   }
 }
 
-/* The hero artwork, lowered where it stands beside the text. The theme centres
-   it in its own column, which reads high against a heading, a second level and
-   a tagline stacked to its left. It moves only at the width where that column
-   exists; below it the artwork sits above the text and the theme's centring is
-   right. Nothing in the chain clips, so the artwork moves rather than crops. */
+/* The hero artwork */
 @media (min-width: 960px) {
   .VPHero .image-src {
     top: 60%;
@@ -141,13 +104,7 @@ html.dark {
   overflow: visible;
 }
 
-/* The icon paths below come from GitHub's Octicons (MIT licence); see
-   THIRD-PARTY-NOTICES.md at the repository root. */
-
-/* GitHub-style alert headers: the octicon GitHub pairs with each alert type,
-   drawn via CSS mask from an inline data URI (no external requests) and
-   painted with currentColor, so it always matches the title text colour.
-   Background, shape, fonts, and colours stay the default theme's. */
+/* GitHub-style icons for admonitions */
 .custom-block.github-alert .custom-block-title::before {
   content: '';
   display: inline-block;
@@ -159,28 +116,25 @@ html.dark {
   -webkit-mask: var(--loom-alert-icon) no-repeat center / contain;
   mask: var(--loom-alert-icon) no-repeat center / contain;
 }
-
+/* The icon paths below come from GitHub's Octicons (MIT licence); see
+   THIRD-PARTY-NOTICES.md at the repository root. */
 /* Note: octicon info-16 */
 .custom-block.github-alert.note,
 .custom-block.github-alert.info {
   --loom-alert-icon: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/></svg>");
 }
-
 /* Tip: octicon light-bulb-16 */
 .custom-block.github-alert.tip {
   --loom-alert-icon: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/></svg>");
 }
-
 /* Important: octicon report-16 */
 .custom-block.github-alert.important {
   --loom-alert-icon: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/></svg>");
 }
-
 /* Warning: octicon alert-16 */
 .custom-block.github-alert.warning {
   --loom-alert-icon: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/></svg>");
 }
-
 /* Caution: octicon stop-16 */
 .custom-block.github-alert.caution,
 .custom-block.github-alert.danger {
