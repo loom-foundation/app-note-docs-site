@@ -38,7 +38,9 @@ html.dark {
   font-size: 18px;
 }
 
-/* Landing hero name gradient colours. */
+/* Landing hero name gradient colours, and the shadow the wordmark casts:
+   offset, blur, colour. The social card reads the shadow from here too, so the
+   card and the page it is a still of are lit the same way. */
 :root {
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
@@ -46,6 +48,18 @@ html.dark {
     var(--loom-accent-1) 10%,
     var(--loom-accent-3)
   );
+  --loom-hero-name-shadow: 2px 2px 2px rgba(24, 20, 8, 0.12);
+}
+
+/* The wordmark, lifted off the page by a shadow cast down and to the right.
+   A filter rather than a text-shadow: the gradient above is a background
+   clipped to the glyphs, and a background paints before the text layer a
+   text-shadow belongs to, so that shadow would land on top of the colour it is
+   meant to sit behind and show through the letterforms, which are themselves
+   transparent. A filter takes the element as already drawn and puts its
+   silhouette behind it. */
+.VPHero .heading .name {
+  filter: drop-shadow(var(--loom-hero-name-shadow));
 }
 
 /* Hero buttons */
