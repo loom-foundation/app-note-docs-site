@@ -68,7 +68,7 @@ export default withMermaid({
     root: { label: 'English (GB)', lang: 'en-GB' },
   },
   themeConfig: {
-    logo: { light: '/loom-wordmark.svg', dark: '/loom-wordmark-inverted.svg' },
+    logo: { light: '/note-loom-wordmark.svg', dark: '/note-loom-wordmark-inverted.svg' },
     siteTitle: 'Note',
     search: { provider: 'local' },
     nav: [
