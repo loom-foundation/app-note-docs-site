@@ -91,7 +91,11 @@ export default withMermaid({
   },
   transformPageData(pageData) {
     const isHome = pageData.relativePath === 'index.md'
-    const title = pageData.title
+    // A page's own title, falling back to the site's. The home layout has no
+    // level-one heading for VitePress to infer a title from, so a page that
+    // declares none leaves this empty, and an empty og:title is what a shared
+    // link would show as its headline.
+    const title = pageData.title || 'Note'
     const description = pageData.description || siteDescription
     const url = pageUrl(pageData.relativePath)
     // The brand carries no dedicated social-card image yet; the hero image
