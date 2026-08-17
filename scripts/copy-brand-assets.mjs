@@ -1,8 +1,9 @@
 // Copies the Foundation brand assets into the VitePress public directory.
 //
-// The favicon and the two wordmarks are owned by loom-foundation/org, which
-// is their single source of truth. They are not tracked here: the npm
-// `predocs:build` and `predocs:dev` hooks run this script, so an ordinary
+// The favicon, the Apple touch icon and the two wordmarks are owned by
+// loom-foundation/org, which is their single source of truth. They are not
+// tracked here: the npm `predocs:build` and `predocs:dev` hooks run this
+// script, so an ordinary
 // `npm run docs:build` or `npm run docs:dev` picks them up, and .gitignore
 // keeps the copies out of the repository.
 //
@@ -50,7 +51,7 @@ const sourceDir = path.join(workspaceRoot(repoRoot), 'org/brand/assets')
 const targetDir = path.join(repoRoot, 'docs/.vitepress/public')
 const themeCss = path.join(repoRoot, 'docs/.vitepress/theme/custom.css')
 
-const copied = ['favicon.svg']
+const copied = ['favicon.svg', 'apple-touch-icon.png']
 
 const recoloured = [
   { from: 'loom-wordmark.svg', to: 'note-loom-wordmark.svg' },

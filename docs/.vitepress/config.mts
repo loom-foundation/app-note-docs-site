@@ -2,6 +2,7 @@ import path from 'node:path'
 import { existsSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
+import type { HeadConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 
 // srcDir points OUTSIDE this project root (the corpus checkout carries no
@@ -35,6 +36,20 @@ function workspaceRoot(from: string): string {
 
 const corpusDocs = path.join(workspaceRoot(configDir), 'corpora/note/docs')
 
+const siteHostname = 'https://note.theloommethod.org'
+// The site description: the home page's own description and the fallback for
+// any page without one, written once here rather than authored again per page.
+const siteDescription =
+  'Note is a method for capturing intent and specifications as structured plain markdown. Anyone with file access (human or AI) can participate, read, and write.'
+
+// Mirrors VitePress's own sitemap URL derivation (the home page collapses to
+// the site root, every other page keeps its .html extension), so canonical
+// links and Open Graph URLs agree with the URLs sitemap.xml lists.
+function pageUrl(relativePath: string): string {
+  const clean = relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '.html')
+  return `${siteHostname}/${clean}`
+}
+
 // The docs SOURCE lives in the Note corpus (corpora/note/docs in the west
 // workspace); this repository is only the disposable renderer. srcDir points
 // at the corpus in place, so the markdown is never moved or copied here.
@@ -49,11 +64,51 @@ const corpusDocs = path.join(workspaceRoot(configDir), 'corpora/note/docs')
 // whoever maintains the corpus. Neither is a page for a reader.
 export default withMermaid({
   title: 'Note',
+  description: siteDescription,
   srcDir: corpusDocs,
+  sitemap: { hostname: siteHostname },
   // Static assets ship from this app, not the corpus: Vite's public dir
   // would default to srcDir/public (inside the protected corpus checkout),
   // so it is pinned to this app's own docs/.vitepress/public instead.
-  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
+  ],
+  // VitePress hard-codes this tag with no config switch to suppress it.
+  transformHtml(code) {
+    return code.replace(/\s*<meta name="generator"[^>]*>\n?/, '')
+  },
+  transformPageData(pageData) {
+    const isHome = pageData.relativePath === 'index.md'
+    const title = pageData.title
+    const description = pageData.description || siteDescription
+    const url = pageUrl(pageData.relativePath)
+    // The brand carries no dedicated social-card image yet; the hero image
+    // stands in as a placeholder. Open Graph and Twitter both prefer a
+    // 1200x630 image, and this asset is not that shape, so some crawlers may
+    // crop or decline it until a designed card replaces it.
+    const image = `${siteHostname}/ada-lovelace-note-g.webp`
+    const head: HeadConfig[] = [
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:type', content: isHome ? 'website' : 'article' }],
+      ['meta', { property: 'og:site_name', content: 'Note' }],
+      ['meta', { property: 'og:locale', content: 'en_GB' }],
+      ['meta', { property: 'og:image', content: image }],
+      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: description }],
+      ['meta', { name: 'twitter:image', content: image }],
+      ['link', { rel: 'canonical', href: url }],
+    ]
+    return {
+      frontmatter: {
+        ...pageData.frontmatter,
+        head: [...(pageData.frontmatter.head ?? []), ...head],
+      },
+    }
+  },
   markdown: {
     attrs: { disable: true },
     // VitePress 1.x hard-codes UPPERCASE labels for GitHub-flavoured alerts;
