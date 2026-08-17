@@ -26,6 +26,9 @@
   --vp-home-hero-name-background: linear-gradient(12deg, #D600FF 10%, #00E5FF);
 }
 
+/* The icon paths below come from GitHub's Octicons (MIT licence); see
+   THIRD-PARTY-NOTICES.md at the repository root. */
+
 /* GitHub-style alert headers: the octicon GitHub pairs with each alert type,
    drawn via CSS mask from an inline data URI (no external requests) and
    painted with currentColor, so it always matches the title text colour.
